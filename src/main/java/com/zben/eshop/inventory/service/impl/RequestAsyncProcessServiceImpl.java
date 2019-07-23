@@ -1,10 +1,13 @@
 package com.zben.eshop.inventory.service.impl;
 
+import com.zben.eshop.inventory.request.ProductInventoryCacheRefreshRequest;
+import com.zben.eshop.inventory.request.ProductInventoryDbUpdateRequest;
 import com.zben.eshop.inventory.request.Request;
 import com.zben.eshop.inventory.request.RequestQueue;
 import com.zben.eshop.inventory.service.RequestAsyncProcessService;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -17,10 +20,30 @@ public class RequestAsyncProcessServiceImpl implements RequestAsyncProcessServic
 
     @Override
     public void process(Request request) {
-        //做路由请求，根据每个请求的商品id，路由到对应的内存队列中
-        //ArrayBlockingQueue是多线程并发安全的
-        ArrayBlockingQueue<Request> queue = getRoutingQueue(request.getProductId());
+
         try {
+            //先做去重读请求
+            Map<Integer, Boolean> flagMap = RequestQueue.getInstance().getFlagMap();
+            //如果是更新请求, 那么就将标识设置为true
+            if (request instanceof ProductInventoryDbUpdateRequest) {
+                flagMap.put(request.getProductId(), true);
+            }
+            // 如果是读请求，那么就判断，如果标识位不为空，而且是true，说明之前有一个商品的更新请求
+            else if (request instanceof ProductInventoryCacheRefreshRequest) {
+                Boolean flag = flagMap.get(request.getProductId());
+                if (flag != null && flag) {
+                    flagMap.put(request.getProductId(), false);
+                }
+                //如果是缓存刷新请求，而且发现标识是false
+                //说明前面有一个数据库请求+缓存刷新请求，不需要再加入到内存队列
+                if (flag != null && !flag) {
+                    return;
+                }
+            }
+
+            //做路由请求，根据每个请求的商品id，路由到对应的内存队列中
+            //ArrayBlockingQueue是多线程并发安全的
+            ArrayBlockingQueue<Request> queue = getRoutingQueue(request.getProductId());
             //将请求加入到内存队列
             queue.put(request);
         } catch (InterruptedException e) {

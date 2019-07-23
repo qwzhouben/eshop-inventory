@@ -1,7 +1,10 @@
 package com.zben.eshop.inventory.request;
 
+import com.google.common.collect.Maps;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -15,6 +18,10 @@ public class RequestQueue {
      * 内存队列
      */
     private List<ArrayBlockingQueue<Request>> queues = new ArrayList<ArrayBlockingQueue<Request>>();
+    /**
+     * 标识位
+     */
+    private Map<Integer, Boolean> flagMap = Maps.newConcurrentMap();
 
     /**
      * 静态内部类的方式，去初始化单例，绝对线程安全的方法
@@ -64,6 +71,10 @@ public class RequestQueue {
      */
     public ArrayBlockingQueue<Request> getQueue(int index) {
         return queues.get(index);
+    }
+
+    public Map<Integer, Boolean> getFlagMap() {
+        return flagMap;
     }
 
 }
