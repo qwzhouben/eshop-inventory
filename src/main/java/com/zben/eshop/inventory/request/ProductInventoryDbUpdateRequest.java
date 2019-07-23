@@ -2,6 +2,7 @@ package com.zben.eshop.inventory.request;
 
 import com.zben.eshop.inventory.model.ProductInventory;
 import com.zben.eshop.inventory.service.ProductInventoryService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @DESC: 商品库存更新请求: 比如一个商品发生了交易，那么就要修改这个商品对应的库存
@@ -11,6 +12,7 @@ import com.zben.eshop.inventory.service.ProductInventoryService;
  * @author: jhon.zhou
  * @date: 2019/7/23 0023 10:14
  */
+@Slf4j
 public class ProductInventoryDbUpdateRequest implements  Request {
 
     /**
@@ -29,14 +31,22 @@ public class ProductInventoryDbUpdateRequest implements  Request {
 
     @Override
     public void process() {
+        log.info("=====日志===== 库存更新开始执行 productId:{}, count:{}", productInventory.getProductId(), productInventory.getInventoryCnt());
         //删除库存缓存
-        productInventoryService.updateProductInventory(productInventory);
-        //更新库存
         productInventoryService.clearProductInventoryCache(productInventory);
+        log.info("=====日志===== 已删除redis中的缓存");
+        //更新库存
+        productInventoryService.updateProductInventory(productInventory);
+        log.info("=====日志===== 已修改数据库的库存, productId:{}", productInventory.getProductId());
     }
 
     @Override
     public Integer getProductId() {
         return productInventory.getProductId();
+    }
+
+    @Override
+    public boolean isForceRefresh() {
+        return false;
     }
 }

@@ -13,19 +13,19 @@ public class Response {
     private String status;
     private String message;
 
-    private String getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    private void setStatus(String status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    private String getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    private void setMessage(String message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 
