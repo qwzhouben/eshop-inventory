@@ -26,4 +26,9 @@ public class ProductInventoryCacheRefreshRequest implements Request {
         //更新缓存
         productInventoryService.refreshCache(productInventory);
     }
+
+    @Override
+    public Integer getProductId() {
+        return productId;
+    }
 }

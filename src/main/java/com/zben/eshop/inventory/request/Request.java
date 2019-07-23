@@ -8,4 +8,6 @@ package com.zben.eshop.inventory.request;
 public interface Request {
 
     void process();
+
+    Integer getProductId();
 }

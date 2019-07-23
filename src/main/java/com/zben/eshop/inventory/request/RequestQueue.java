@@ -41,8 +41,29 @@ public class RequestQueue {
         return Singleton.getInstance();
     }
 
+    /**
+     * 添加内存队列
+     * @param queue
+     */
     public void addQueue(ArrayBlockingQueue queue) {
         this.queues.add(queue);
+    }
+
+    /**
+     * 获取内存队列的数量
+     * @return
+     */
+    public int getQueueSize() {
+        return queues.size();
+    }
+
+    /**
+     * 获取内存队列
+     * @param index
+     * @return
+     */
+    public ArrayBlockingQueue<Request> getQueue(int index) {
+        return queues.get(index);
     }
 
 }
