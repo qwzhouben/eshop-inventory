@@ -6,6 +6,7 @@ import com.zben.eshop.inventory.service.ProductInventoryService;
 import com.zben.eshop.inventory.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @DESC: 商品库存Service实现
@@ -40,5 +41,18 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     @Override
     public void refreshCache(ProductInventory productInventory) {
         redisService.set(PRODUCT_INVENTORY_CACHE_KEY + productInventory.getProductId(), String.valueOf(productInventory.getInventoryCnt()));
+    }
+
+    @Override
+    public ProductInventory findProductInventoryCache(Integer productId) {
+        String productInventoryStr = redisService.get(PRODUCT_INVENTORY_CACHE_KEY + productId);
+        if (!StringUtils.isEmpty(productInventoryStr)) {
+            try {
+                return new ProductInventory(productId, Long.valueOf(productInventoryStr));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

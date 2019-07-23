@@ -11,7 +11,7 @@ import com.zben.eshop.inventory.service.ProductInventoryService;
  * @author: jhon.zhou
  * @date: 2019/7/23 0023 10:14
  */
-public class ProductInventoryDBUpdateRequest implements  Request {
+public class ProductInventoryDbUpdateRequest implements  Request {
 
     /**
      * 商品库存
@@ -22,7 +22,7 @@ public class ProductInventoryDBUpdateRequest implements  Request {
      */
     private ProductInventoryService productInventoryService;
 
-    public ProductInventoryDBUpdateRequest(ProductInventory productInventory, ProductInventoryService productInventoryService) {
+    public ProductInventoryDbUpdateRequest(ProductInventory productInventory, ProductInventoryService productInventoryService) {
         this.productInventory = productInventory;
         this.productInventoryService = productInventoryService;
     }

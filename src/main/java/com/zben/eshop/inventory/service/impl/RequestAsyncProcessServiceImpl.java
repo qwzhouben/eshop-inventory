@@ -18,6 +18,7 @@ public class RequestAsyncProcessServiceImpl implements RequestAsyncProcessServic
     @Override
     public void process(Request request) {
         //做路由请求，根据每个请求的商品id，路由到对应的内存队列中
+        //ArrayBlockingQueue是多线程并发安全的
         ArrayBlockingQueue<Request> queue = getRoutingQueue(request.getProductId());
         try {
             //将请求加入到内存队列
