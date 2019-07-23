@@ -6,4 +6,6 @@ package com.zben.eshop.inventory.request;
  * @DATE: 2019/7/23 0023 9:19
  */
 public interface Request {
+
+    void process();
 }

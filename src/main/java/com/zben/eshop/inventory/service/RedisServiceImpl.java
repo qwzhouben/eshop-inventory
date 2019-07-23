@@ -24,4 +24,9 @@ public class RedisServiceImpl implements RedisService {
     public String get(String key) {
         return jedisCluster.get(key);
     }
+
+    @Override
+    public void del(String key) {
+        jedisCluster.del(key);
+    }
 }
